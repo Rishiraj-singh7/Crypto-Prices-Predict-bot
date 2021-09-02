@@ -64,3 +64,22 @@ model_input = model_inputs.reshape(-1, 1)
 model_input = scaler.fit_transform(model_input)
 
 x_test = []
+
+for x in range(prediction_days, len(model_input)):
+    x_test.append(model_input[x-prediction_days:x, 0])
+
+
+x_text = np.array(x_test)
+x_text = np.reshape(x_text, (x_text.shape[0], x_test.shape[1], 1))
+
+
+prediction_prices = model.predict(x_text)
+prediction_prices = scaler.inverse_transform(prediction_prices)
+
+plt.plot(actual_prices, color='black',  label='Actual Prices')
+plt.plot(prediction_prices, color='green', label='predicted Prices')
+plt.tittle(f'{crypto_currency} price prediction')
+plt.xlabel('Time')
+plt.ylabel('Price')
+plt.legend(lOC='UPPER LEFT')
+plt.show()
