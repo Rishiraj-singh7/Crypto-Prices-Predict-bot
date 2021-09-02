@@ -44,7 +44,10 @@ model.add(LSTM(units=50, return_sequences=True))
 model.add(Dropout(0.2))
 model.add(LSTM(units=50))
 model.add(Dropout(0.2))
-model.Dense(units=1)
+model.add(Dense(units=1))
+
+
+
 
 model.compile(optimizer='adam', loss='mean_squared_error')
 model.fit(x_train, y_train, epochs=25, batch_size=32)
@@ -59,9 +62,9 @@ actual_prices = test_data['Close'].values.reshape
 
 total_dataset = pd.contact((data['Close'], test_data['Close']), axis=0)
 
-model_input = total_dataset[LEN(total_dataset)- len(test_data)- prediction_days:].values
-model_input = model_inputs.reshape(-1, 1)
-model_input = scaler.fit_transform(model_input)
+model_inputs = total_dataset[LEN(total_dataset)- len(test_data)- prediction_days:].values
+model_inputs = model_inputs.reshape(-1, 1)
+model_inputs = scaler.fit_transform(model_input)
 
 x_test = []
 
@@ -83,3 +86,13 @@ plt.xlabel('Time')
 plt.ylabel('Price')
 plt.legend(lOC='UPPER LEFT')
 plt.show()
+
+# predict Next Day
+
+real_data = [model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs)+ 1, 0]]
+real_data = np.array(real_data)
+real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
+
+prediction = model.predict(real_data)
+prediction = scaler.inverse_transform(prediction)
+print()
